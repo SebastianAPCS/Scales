@@ -2,24 +2,22 @@
 import java.util.ArrayList;
 
 void setup() {
-  size(500, 500);
+  size(500, 500, P3D);
+  strokeWeight(5);
   noLoop();
 }
 
 void draw() {
-  scale(100, 100, 200, Math.random());
+  scale(100, 100, 100);
 }
 
-void scale (int x, int y, int c, double rand) {
+void scale (int x, int y, int c) {
   // Initiate randomness
-  rand = rand * Math.sqrt(Math.random());
-  fill((int)(c * ((Math.random()) / rand)));
+  fill((int)(Math.random() * 250), (float)(Math.random() * 100), 0);
   
   beginShape();
-  vertex(x-10, y);
-  bezierVertex((float)(x-10 + rand), (float)(y-10), (float)(x-5 + rand), (float)y-10, x, y-20);
-  vertex(x, y-20);
-  bezierVertex((float)(x+5 - rand), y-10, (float)(x+10 - rand), y-10, x+10, y);
+  vertex(x, y);
+  vertex(x, y);
   endShape(CLOSE);
   
 }
