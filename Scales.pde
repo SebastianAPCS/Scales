@@ -6,6 +6,8 @@ Created on 9/13/2023 (11:20 PM) by Sebastian Dowell for Mr. Chan's APCSA Scales 
 
 float rotX = 0;
 float rotY = 0;
+float deltaX = 0;
+float deltaZ = 0;
 
 int colorData[][][] = new int[height * 2 + 1][width * 2 + 1][4];
 
@@ -24,12 +26,12 @@ void draw() {
   rotateY(rotY);
   lights();
   
-  for (int i = 0; i <= height * 2; i += 15) {
-     for (int j = 0; j <= width * 2; j += 15) {
-       drawScale(j - (width / 2), 100, i - (height / 2), 
-                (int)((colorData[i][j][1] * 144/4) + ((144*3)/4)), 
-                (int)((colorData[i][j][2] * 238/4) + ((238*3)/4)), 
-                (int)((colorData[i][j][3] * 144/4) + ((144*3)/4)), 60);
+  for (int i = 0; i <= height; i += 45) {
+     for (int j = 0; j <= width; j += 45) {
+       drawScale(j - (width / 2) - deltaX, 100, i - (height / 2) + deltaZ, 
+                (int)((colorData[i][j][1] * 144/6) + ((144*5)/6)), 
+                (int)((colorData[i][j][2] * 238/6) + ((238*5)/6)), 
+                (int)((colorData[i][j][3] * 144/6) + ((144*5)/6)), 60);
      }
   }
 }
@@ -96,10 +98,27 @@ void mouseDragged() {
   rotY += dX;
 }
 
+void keyPressed() {
+  switch(key) {
+    case 'w':
+      deltaZ ++;
+      break;
+    case 'a':
+      deltaX --;
+      break;
+    case 's':
+      deltaZ --;
+      break;
+    case 'd':
+      deltaX ++;
+      break;
+  }
+}
+
 int[][][] initializeColorData() {
   int colorData[][][] = new int[height * 2 + 1][width * 2 + 1][4];
-    for (int i = 0; i <= height * 2; i += 15) {
-     for (int j = 0; j <= width * 2; j += 15) {
+    for (int i = 0; i <= height * 2; i += 45) {
+     for (int j = 0; j <= width * 2; j += 45) {
        for (int k = 1; k <= 3; k++) {
          colorData[i][j][k] = (int)(Math.floor(Math.random() * 4));
        }
