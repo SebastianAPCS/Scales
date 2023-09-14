@@ -4,10 +4,19 @@ Created on 9/13/2023 (11:20 PM) by Sebastian Dowell for Mr. Chan's APCSA Scales 
 
 */
 
+// Initial Declarations
+
 float rotX = 0;
 float rotY = 0;
 float deltaX = 0;
 float deltaZ = 0;
+double t = 0;
+double tref = 0;
+double v = 0;
+double a = 30;
+double vlim = 15;
+
+boolean isKeyPressed = false;
 
 int colorData[][][] = new int[height * 2 + 1][width * 2 + 1][4];
 
@@ -26,6 +35,10 @@ void draw() {
   rotateY(rotY);
   lights();
   
+  textSize(128);
+  fill(200);
+  text("SCALES", -200, -100);
+  
   for (int i = 0; i <= height; i += 45) {
      for (int j = 0; j <= width; j += 45) {
        drawScale(j - (width / 2) - deltaX, 100, i - (height / 2) + deltaZ, 
@@ -34,7 +47,30 @@ void draw() {
                 (int)((colorData[i][j][3] * 144/6) + ((144*5)/6)), 60);
      }
   }
+  
+  if (isKeyPressed) {
+    t = (millis() - tref) / 1000.0;
+    if (v > vlim) {
+      v = vlim;
+    } else if (vlim > v) {
+      v = a * t;
+    }
+    
+    System.out.println("Speed: " + v); // debug
+    
+    if (key == 'w' || key == 'W') {
+      deltaZ += v; // Originally 2
+    } else if (key == 's' || key == 'S') {
+      deltaZ -= v;
+    } else if (key == 'a' || key == 'A') {
+      deltaX -= v;
+    } else if (key == 'd' || key == 'D') {
+      deltaX += v;
+    }
+  }
 }
+
+// Important Functions
 
 void drawScale(float x, float y, float z, int r, int g, int b, int s) {
   noStroke();
@@ -99,20 +135,16 @@ void mouseDragged() {
 }
 
 void keyPressed() {
-  switch(key) {
-    case 'w':
-      deltaZ ++;
-      break;
-    case 'a':
-      deltaX --;
-      break;
-    case 's':
-      deltaZ --;
-      break;
-    case 'd':
-      deltaX ++;
-      break;
-  }
+  isKeyPressed = true;
+  tref = millis();
+}
+
+void keyReleased() {
+  isKeyPressed = false;
+  v = 0;
+  t = 0;
+  tref = 0;
+  a = 30;
 }
 
 int[][][] initializeColorData() {
