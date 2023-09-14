@@ -45,10 +45,12 @@ void draw() {
        if ((((int)deltaX/45) != 0) & (((int)deltaZ/45) != 0)) {
          
        } else if ((((int)deltaX/25) == 0) & (((int)deltaZ/25) != 0)) {
+         
          drawScale(j - (width / 2) - deltaX, 100, i - (height / 2) + deltaZ - ((int)deltaZ/25)*25, 
-                (int)((colorData[i + (Math.abs(((int)deltaZ/45))%1001)*45][j][1] * 144/6) + ((144*5)/6)), 
-                (int)((colorData[i + (Math.abs(((int)deltaZ/45))%1001)*45][j][2] * 238/6) + ((238*5)/6)), 
-                (int)((colorData[i + (Math.abs(((int)deltaZ/45))%1001)*45][j][3] * 144/6) + ((144*5)/6)), 60);
+                (int)((colorData[(i + (Math.abs(((int)deltaZ/45)*45)))%1001][j][1] * 144/6) + ((144*5)/6)), 
+                (int)((colorData[(i + (Math.abs(((int)deltaZ/45)*45)))%1001][j][2] * 238/6) + ((238*5)/6)), 
+                (int)((colorData[(i + (Math.abs(((int)deltaZ/45)*45)))%1001][j][3] * 144/6) + ((144*5)/6)), 60);
+                
        } else if ((((int)deltaX/45) != 0) & (((int)deltaZ/45) == 0)) {
          
        } else {
@@ -56,7 +58,9 @@ void draw() {
                 (int)((colorData[i][j][1] * 144/6) + ((144*5)/6)), 
                 (int)((colorData[i][j][2] * 238/6) + ((238*5)/6)), 
                 (int)((colorData[i][j][3] * 144/6) + ((144*5)/6)), 60);
+         
        }
+       System.out.println((Math.abs(((int)deltaZ/45))%1001));
      }
   }
   
@@ -68,7 +72,7 @@ void draw() {
       v = a * t;
     }
 
-    System.out.println("Speed: " + v); // debug
+    //System.out.println("Speed: " + v); // debug
     
     if (keysPressed['w'] || keysPressed['W']) {
       deltaZ += v; // Move forward
