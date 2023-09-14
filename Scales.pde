@@ -42,11 +42,14 @@ void draw() {
   
   for (int i = 0; i <= height; i += 45) {
      for (int j = 0; j <= width; j += 45) {
-       if ((((int)deltaX/45) != 0) & (((int)deltaX/45) != 0)) {
+       if ((((int)deltaX/45) != 0) & (((int)deltaZ/45) != 0)) {
          
-       } else if ((((int)deltaX/45) == 0) & (((int)deltaX/45) != 0)) {
-         
-       } else if ((((int)deltaX/45) != 0) & (((int)deltaX/45) == 0)) {
+       } else if ((((int)deltaX/25) == 0) & (((int)deltaZ/25) != 0)) {
+         drawScale(j - (width / 2) - deltaX, 100, i - (height / 2) + deltaZ - ((int)deltaZ/25)*25, 
+                (int)((colorData[i + (Math.abs(((int)deltaZ/45))%1001)*45][j][1] * 144/6) + ((144*5)/6)), 
+                (int)((colorData[i + (Math.abs(((int)deltaZ/45))%1001)*45][j][2] * 238/6) + ((238*5)/6)), 
+                (int)((colorData[i + (Math.abs(((int)deltaZ/45))%1001)*45][j][3] * 144/6) + ((144*5)/6)), 60);
+       } else if ((((int)deltaX/45) != 0) & (((int)deltaZ/45) == 0)) {
          
        } else {
          drawScale(j - (width / 2) - deltaX, 100, i - (height / 2) + deltaZ, 
