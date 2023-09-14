@@ -14,9 +14,10 @@ double t = 0;
 double tref = 0;
 double v = 0;
 double a = 30;
-double vlim = 15;
+double vlim = 10;
 
 boolean isKeyPressed = false;
+boolean[] keysPressed = new boolean[128];
 
 int colorData[][][] = new int[height * 2 + 1][width * 2 + 1][4];
 
@@ -55,17 +56,20 @@ void draw() {
     } else if (vlim > v) {
       v = a * t;
     }
-    
+
     System.out.println("Speed: " + v); // debug
     
-    if (key == 'w' || key == 'W') {
-      deltaZ += v; // Originally 2
-    } else if (key == 's' || key == 'S') {
-      deltaZ -= v;
-    } else if (key == 'a' || key == 'A') {
-      deltaX -= v;
-    } else if (key == 'd' || key == 'D') {
-      deltaX += v;
+    if (keysPressed['w'] || keysPressed['W']) {
+      deltaZ += v; // Move forward
+    }
+    if (keysPressed['s'] || keysPressed['S']) {
+      deltaZ -= v; // Move backward
+    }
+    if (keysPressed['a'] || keysPressed['A']) {
+      deltaX -= v; // Move left
+    }
+    if (keysPressed['d'] || keysPressed['D']) {
+      deltaX += v; // Move right
     }
   }
 }
@@ -136,11 +140,13 @@ void mouseDragged() {
 
 void keyPressed() {
   isKeyPressed = true;
+  keysPressed[key] = true;
   tref = millis();
 }
 
 void keyReleased() {
   isKeyPressed = false;
+  keysPressed[key] = false;
   v = 0;
   t = 0;
   tref = 0;
