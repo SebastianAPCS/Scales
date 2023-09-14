@@ -42,10 +42,18 @@ void draw() {
   
   for (int i = 0; i <= height; i += 45) {
      for (int j = 0; j <= width; j += 45) {
-       drawScale(j - (width / 2) - deltaX, 100, i - (height / 2) + deltaZ, 
+       if ((((int)deltaX/45) != 0) & (((int)deltaX/45) != 0)) {
+         
+       } else if ((((int)deltaX/45) == 0) & (((int)deltaX/45) != 0)) {
+         
+       } else if ((((int)deltaX/45) != 0) & (((int)deltaX/45) == 0)) {
+         
+       } else {
+         drawScale(j - (width / 2) - deltaX, 100, i - (height / 2) + deltaZ, 
                 (int)((colorData[i][j][1] * 144/6) + ((144*5)/6)), 
                 (int)((colorData[i][j][2] * 238/6) + ((238*5)/6)), 
                 (int)((colorData[i][j][3] * 144/6) + ((144*5)/6)), 60);
+       }
      }
   }
   
