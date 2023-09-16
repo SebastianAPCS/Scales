@@ -9,17 +9,26 @@ Created on 9/13/2023 (11:20 PM) by Sebastian Dowell for Mr. Chan's APCSA Scales 
 float rotX = 0;
 float rotY = 0;
 float deltaX = 0;
+float deltaY = 0;
 float deltaZ = 0;
+
 double t = 0;
 double tref = 0;
 double v = 0;
 double a = 30;
 double vlim = 10;
 
+int r = 255;
+int g = 255;
+int b = 0;
+
+boolean showIntro = true;
 boolean isKeyPressed = false;
-boolean[] keysPressed = new boolean[128];
+boolean[] keysPressed = new boolean[65536]; // e
 
 int colorData[][][] = new int[height * 2 + 1][width * 2 + 1][4];
+
+// Scales Code
 
 void setup() {
   size(500, 500, P3D);
@@ -38,28 +47,32 @@ void draw() {
   
   textSize(128);
   fill(200);
-  text("SCALES", -200, -100);
+  text("SCALES", -200 - deltaX, -100 + deltaY, 0 + deltaZ);
+  
+  if (showIntro) {
+    fill(r, g, b);
+    textSize(32);
+    text("WASD to move", -175, -50, 0);
+    text("F to move down", -175, -15, 0);
+    text("SPACE to move up", -175, 20, 0);
+    text("MOUSE to adjust perspective", -175, 55, 0);
+    /*
+    r = r % 255;
+    g = g % 255;
+    b = b % 255;
+    
+    r += ((int)(Math.random() * 5));
+    b += ((int)(Math.random() * 5));
+    g += ((int)(Math.random() * 5));
+    */
+  }
   
   for (int i = 0; i <= height; i += 45) {
      for (int j = 0; j <= width; j += 45) {
-       if ((((int)deltaX/45) != 0) & (((int)deltaZ/45) != 0)) {
-         
-       } else if ((((int)deltaX/25) == 0) & (((int)deltaZ/25) != 0)) {
-         
-         drawScale(j - (width / 2) - deltaX, 100, i - (height / 2) + deltaZ - ((int)deltaZ/25)*25, 
-                (int)((colorData[(i + (Math.abs(((int)deltaZ/45)*45)))%1001][j][1] * 144/6) + ((144*5)/6)), 
-                (int)((colorData[(i + (Math.abs(((int)deltaZ/45)*45)))%1001][j][2] * 238/6) + ((238*5)/6)), 
-                (int)((colorData[(i + (Math.abs(((int)deltaZ/45)*45)))%1001][j][3] * 144/6) + ((144*5)/6)), 60);
-                
-       } else if ((((int)deltaX/45) != 0) & (((int)deltaZ/45) == 0)) {
-         
-       } else {
-         drawScale(j - (width / 2) - deltaX, 100, i - (height / 2) + deltaZ, 
+       drawScale(j - (width / 2) - deltaX, 100 + deltaY, i - (height / 2) + deltaZ, 
                 (int)((colorData[i][j][1] * 144/6) + ((144*5)/6)), 
                 (int)((colorData[i][j][2] * 238/6) + ((238*5)/6)), 
                 (int)((colorData[i][j][3] * 144/6) + ((144*5)/6)), 60);
-         
-       }
        System.out.println((Math.abs(((int)deltaZ/45))%1001));
      }
   }
@@ -75,21 +88,25 @@ void draw() {
     //System.out.println("Speed: " + v); // debug
     
     if (keysPressed['w'] || keysPressed['W']) {
-      deltaZ += v; // Move forward
+      deltaZ += v;
     }
     if (keysPressed['s'] || keysPressed['S']) {
-      deltaZ -= v; // Move backward
+      deltaZ -= v;
     }
     if (keysPressed['a'] || keysPressed['A']) {
-      deltaX -= v; // Move left
+      deltaX -= v;
     }
     if (keysPressed['d'] || keysPressed['D']) {
-      deltaX += v; // Move right
+      deltaX += v;
+    }
+    if (keysPressed[' '] || keysPressed[32]) {
+      deltaY += v;
+    }
+    if (keysPressed['f']) {
+      deltaY -= v;
     }
   }
 }
-
-// Important Functions
 
 void drawScale(float x, float y, float z, int r, int g, int b, int s) {
   noStroke();
@@ -131,7 +148,9 @@ void drawEllipsoid(float x, float y, float z, float rx, float ry) {
     float z1  = z + ry * cos(lat1);
     float r0  = 0.5 * rx * sin(lat0);
     float r1  = 0.5 * rx * sin(lat1);
+    
     beginShape(TRIANGLE_STRIP);
+    
     for (int j = 0; j <= detail; j++) {
       float lon = 2 * PI * (float) j / detail;
       float x0 = x + cos(lon) * r0;
@@ -141,6 +160,7 @@ void drawEllipsoid(float x, float y, float z, float rx, float ry) {
       vertex(x0, y0, z0);
       vertex(x1, y1, z1);
     }
+    
     endShape();
   }
 }
@@ -154,18 +174,28 @@ void mouseDragged() {
 }
 
 void keyPressed() {
+  showIntro = false;
   isKeyPressed = true;
   keysPressed[key] = true;
   tref = millis();
 }
 
 void keyReleased() {
-  isKeyPressed = false;
   keysPressed[key] = false;
-  v = 0;
-  t = 0;
-  tref = 0;
-  a = 30;
+  
+  if (isKeysPressedEmpty()) {
+    isKeyPressed = false;
+    v = 0;
+  }
+}
+
+boolean isKeysPressedEmpty() {
+  for (boolean keyPressed : keysPressed) {
+    if (keyPressed) {
+      return false;
+    }
+  }
+  return true;
 }
 
 int[][][] initializeColorData() {
